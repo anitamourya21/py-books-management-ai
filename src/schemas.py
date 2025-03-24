@@ -7,6 +7,7 @@ class BookCreate(BaseModel):
     author: str = Field(..., example="F. Scott Fitzgerald")
     genre: Optional[str] = Field(..., example="Fiction")
     year_published: Optional[int] = Field(..., example=1925)
+    summary: Optional[str] = Field(..., example="The Great Gatsby, by F. Scott Fitzgerald, is an epic adventure that takes readers through glittering nights and fading sunsets of a decadent era.")
 
 class BookResponse(BookCreate):
     id: int

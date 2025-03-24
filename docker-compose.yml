@@ -1,8 +1,30 @@
+version: "3.8"
 
 services:
+  books_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: books_appai
+    depends_on:
+      - db
+      - ollama
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://root:superuser@db:5432/books_db
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - .:/app
+    restart: always
+    command: >
+      sh -c "sleep 10 && uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload"
+
+
   db:
     image: postgres:15
-    container_name: books_db
+    container_name: books_postgres_db
     restart: always
     environment:
       POSTGRES_USER: root
@@ -11,22 +33,18 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
 
-  app:
-    build: .
-    container_name: fastapi_app
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: postgresql+asyncpg://root:superuser@host.docker.internal:5432/books_db
-
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
     ports:
-      - "8000:8000"
+      - "11434:11434"
     volumes:
-      - .:/app
-    command: >
-      sh -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+      - ollama_data:/root/.ollama  # Persist downloaded models
+    restart: always
+    command: ["serve"]
 
 volumes:
-  postgres_data:
+  pg_data:
+  ollama_data:

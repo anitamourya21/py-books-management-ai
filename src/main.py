@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.database import get_db
-from src.services import BookService, ReviewService
+from src.services import BookService, ReviewService, SummaryService
 from src.repositories import BookRepository, ReviewRepository
 from src.schemas import BookCreate, BookResponse, ReviewCreate, ReviewResponse
 from typing import List
@@ -11,6 +11,9 @@ app = FastAPI()
 # Dependency injection
 async def get_book_service(db: AsyncSession = Depends(get_db)):
     return BookService(BookRepository(db))
+
+async def get_summary_service(bservice: BookService = Depends(get_book_service)):
+    return SummaryService(bservice)
 
 async def get_review_service(db: AsyncSession = Depends(get_db)):
     return ReviewService(ReviewRepository(db))
@@ -38,3 +41,14 @@ async def add_review(book_id: int, review_data: ReviewCreate, service: ReviewSer
 @app.get("/books/{book_id}/reviews/", response_model=List[ReviewResponse])
 async def get_reviews(book_id: int, service: ReviewService = Depends(get_review_service)):
     return await service.get_reviews_for_book(book_id)
+
+#
+@app.post("/generate-summary/{book_id}")
+async def generate_summary(book_id: int, service: SummaryService = Depends(get_summary_service)):
+    summary = await service.get_summary_for_book(book_id)
+    return {"summary": summary}
+
+@app.get("/check-summary")
+async def check_summary(service: SummaryService = Depends(get_summary_service)):
+    summary = await service.check_summary_for_book()
+    return {"summary": summary}

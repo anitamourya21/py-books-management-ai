@@ -18,9 +18,9 @@ class BookRepository:
             await self.session.commit()
             await self.session.refresh(book)
             return book
-        except Exception:
+        except Exception as e:
             print_exception(e)
-            return Response("Internal server error", status_code=500)
+            raise e
 
     async def get_books(self):
         try:
@@ -47,9 +47,9 @@ class ReviewRepository:
             self.session.add(review)
             await self.session.commit()
             return review
-        except Exception:
+        except Exception as e:
             print_exception(e)
-            return Response("Internal server error", status_code=500)
+            raise e
 
     async def get_reviews_by_book(self, book_id: int):
         result = await self.session.execute(select(Review).filter(Review.book_id == book_id))

@@ -4,8 +4,7 @@ from sqlalchemy.orm import sessionmaker
 import os
 
 # Ensure you use asyncpg
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://root:superuser@host.docker.internal:5432/books_db")
-# DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Create an async engine
 engine = create_async_engine(DATABASE_URL, echo=True)
