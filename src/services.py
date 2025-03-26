@@ -10,6 +10,23 @@ class BookService:
     async def add_book(self, book_data):
         return await self.book_repo.add_book(book_data)
 
+    async def update_book(self, book_id: int, book_data):
+        return await self.book_repo.update_book(book_id, book_data)
+        """
+        Updates a book's details by its ID.
+        """
+        book = await db.get(Book, book_id)
+        if not book:
+            raise HTTPException(status_code=404, detail="Book not found")
+
+        for key, value in book_data.dict(exclude_unset=True).items():
+            setattr(book, key, value)
+
+        await db.commit()
+        await db.refresh(book)
+        return book
+        return await self.book_repo.add_book(book_data)
+
     async def get_books(self):
         return await self.book_repo.get_books()
 
@@ -38,7 +55,13 @@ class SummaryService:
         title = book_data.title
         content = book_data.summary
 
-        return await self.service.generate_summary(title, content)
+        summary_ai = await self.service.generate_summary(title, content)
+        if summary_ai:
+            book_data = {}
+            book_data["summary_ai"] = summary_ai
+            await self.bservice.update_book(book_id, book_data)
+
+        return summary_ai
 
 
     async def check_summary_for_book(self):
