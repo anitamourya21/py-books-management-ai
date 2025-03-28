@@ -6,4 +6,7 @@ sqlalchemy
 psycopg2-binary
 pydantic
 alembic
-jwt
+openai
+pytest
+httpx
+pytest-asyncio

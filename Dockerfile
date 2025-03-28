@@ -1,15 +1,28 @@
-# Use official Python image
+# Use an official base image with Python
 FROM python:3.10
 
-# Set working directory inside container
+# Set the working directory
 WORKDIR /app
 
-# Copy application files
-COPY . /app
+# Install system dependencies
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://ollama.com/install.sh | sh
 
-# Install dependencies
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install -r requirements.txt
 
-# Run migrations
-CMD alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+# Ensure Ollama binary is in PATH
+ENV PATH="/root/.ollama/bin:$PATH"
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Expose ports for API and Ollama
+EXPOSE 8000 11434
+
+# Start Ollama in the background and then run FastAPI
+CMD ollama serve & uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+
+RUN sleep 10 && ollama pull tinyllama | sh
