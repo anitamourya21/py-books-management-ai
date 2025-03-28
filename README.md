@@ -10,6 +10,8 @@ generate summaries for books and provide book recommendations based on user pref
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Features](#features)
+- [Application Screenshots](#application-screenshots)
 
 
 ## Requirements
@@ -132,3 +134,49 @@ OR
    ```
    http://127.0.0.1:8000/docs
    ```
+   
+
+
+## Features
+
+1. Database Layer (models.py & schemas.py)
+   * Using RDBMS database PostgreSQL for storage of data
+   * Using SQLAlchemy and Pydantic for ORM & data validation
+   * Using Async DB Connection
+   * Bind SQLAlchemy models with Alembic to capture database schema model changes and generating migrations
+2. Repository Layer (repositories.py)
+   * Used for encapsulation of DB Operations. 
+   * This decouples the service layer from direct database access.
+   * This also implements Repository Pattern as part of design patterns.
+3. Service Layer (services.py)
+   * Used for having Business Logic
+   * Implements Service Layer Pattern as one of the architectural pattern
+   * It ensures all business logic is in one place and reusable.
+5. App Layer (main.py)
+   * Handles HTTP requests and delegates logic to services.
+   * Also implements Controller Pattern as one of the architectural pattern
+6. AI Integration
+   * Using ollama to run LLM locally
+   * Integrated tinyllama AI model for summaries
+7. Dockerization 
+   * Using docker image for managing containers and required modules
+   * Docker image can be used for deployment and CI/CD of the application 
+
+
+## Application Screenshots
+
+
+### List of all APIs
+
+
+### Get Books
+
+
+### Add Book
+
+
+### Add Review
+
+
+### Generate Summary
+

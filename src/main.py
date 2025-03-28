@@ -8,7 +8,7 @@ from typing import List
 
 app = FastAPI()
 
-# Dependency injection
+# Dependency injections
 async def get_book_service(db: AsyncSession = Depends(get_db)):
     return BookService(BookRepository(db))
 
@@ -24,13 +24,10 @@ async def get_review_service(db: AsyncSession = Depends(get_db)):
 async def add_book(book_data: BookCreate, service: BookService = Depends(get_book_service)):
     return await service.add_book(book_data)
 
-
 # Update a book's information by its ID
 @app.put("/books/{book_id}", response_model=BookResponse, status_code=201)
 async def update_book(book_id: int, book_data: BookUpdate, service: BookService = Depends(get_book_service)):
     return await service.update_book(book_id, book_data)
-
-
 
 # Retrieve all books
 @app.get("/books/", response_model=List[BookResponse])
@@ -42,7 +39,7 @@ async def get_books(service: BookService = Depends(get_book_service)):
 async def get_book(book_id: int, service: BookService = Depends(get_book_service)):
     return await service.get_book_by_id(book_id)
 
-# Get a summary and aggregated rating for a book
+# Get a summary for a book
 @app.get("/books/{book_id}/summary")
 async def get_book_summary(book_id: int, service: BookService = Depends(get_book_service)):
     book_data = await service.get_book_by_id(book_id)
@@ -50,24 +47,19 @@ async def get_book_summary(book_id: int, service: BookService = Depends(get_book
 
     return {"summary": summary}
 
+# Add review for book
 @app.post("/books/{book_id}/reviews/", response_model=ReviewResponse, status_code=201)
 async def add_review(book_id: int, review_data: ReviewCreate, service: ReviewService = Depends(get_review_service)):
-#     review_data.book_id = book_id
     return await service.add_review(book_id, review_data)
 
+# Get review for a book
 @app.get("/books/{book_id}/reviews/", response_model=List[ReviewResponse])
 async def get_reviews(book_id: int, service: ReviewService = Depends(get_review_service)):
     return await service.get_reviews_for_book(book_id)
 
-#
+# Generate summary for book with AI service
 @app.post("/generate-summary/{book_id}")
 async def generate_summary(book_id: int, service: SummaryService = Depends(get_summary_service)):
     summary = await service.get_summary_for_book(book_id)
     return {"summary": summary}
 
-
-
-@app.get("/check-summary")
-async def check_summary(service: SummaryService = Depends(get_summary_service)):
-    summary = await service.check_summary_for_book()
-    return {"summary": summary}

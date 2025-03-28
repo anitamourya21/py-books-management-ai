@@ -11,6 +11,9 @@ class BookRepository:
 
     async def add_book(self, book_data: BookCreate):
         try:
+            """
+            Add a book's details
+            """
             if not isinstance(book_data, BookCreate):  # Ensure it's a Pydantic model
               raise TypeError("book_data must be a Pydantic model")
 
@@ -26,7 +29,7 @@ class BookRepository:
     async def update_book(self, book_id: int, book_data: BookUpdate):
         try:
             """
-            Updates a book's details by its ID.
+            Updates a book's details by its ID
             """
 
             # Convert Pydantic model to dictionary if not already a dict
@@ -59,6 +62,9 @@ class BookRepository:
 
     async def get_books(self):
         try:
+            """
+            Get all books details
+            """
             result = await self.session.execute(select(Book))
             return result.scalars().all()
         except Exception as e:
@@ -74,6 +80,9 @@ class ReviewRepository:
 
     async def add_review(self, book_id: int, review_data: ReviewCreate):
         try:
+            """
+            Add review for a book by ID
+            """
             if not isinstance(review_data, ReviewCreate):  # Ensure it's a Pydantic model
                raise TypeError("review_data must be a Pydantic model")
             review_dict = review_data.model_dump()
@@ -87,5 +96,8 @@ class ReviewRepository:
             raise e
 
     async def get_reviews_by_book(self, book_id: int):
+        """
+        Get review for a book by ID
+        """
         result = await self.session.execute(select(Review).filter(Review.book_id == book_id))
         return result.scalars().all()

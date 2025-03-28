@@ -32,11 +32,3 @@ class AIService:
             except httpx.RequestError as e:
                 return f"Request Error: {str(e)}"
 
-
-
-    async def check_ollama(self):
-        async with httpx.AsyncClient() as client:
-            response = await client.get("http://ollama:11434/api/tags")
-            print (response)
-
-            return response.json()
