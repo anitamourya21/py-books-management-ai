@@ -168,15 +168,23 @@ OR
 
 ### List of all APIs
 
+<img width="1352" alt="Screenshot 2025-03-28 at 10 52 25 PM" src="https://github.com/user-attachments/assets/033f5b2a-468f-4094-8e66-0f44cd6c37b7" />
 
 ### Get Books
 
+<img width="1218" alt="Screenshot 2025-03-28 at 10 53 06 PM" src="https://github.com/user-attachments/assets/d629dd8a-dae8-49a4-aa0c-06daca06661b" />
 
 ### Add Book
+
+<img width="1204" alt="Screenshot 2025-03-28 at 10 53 40 PM" src="https://github.com/user-attachments/assets/edabd191-8fb0-487b-9cd5-59dcdf5dd43f" />
 
 
 ### Add Review
 
+<img width="1185" alt="Screenshot 2025-03-28 at 10 54 28 PM" src="https://github.com/user-attachments/assets/f37e1fdd-dd9c-4bb3-ac6a-6613eca9f7c9" />
+
 
 ### Generate Summary
+
+<img width="1202" alt="Screenshot 2025-03-28 at 10 55 24 PM" src="https://github.com/user-attachments/assets/8794b41e-b8d8-4631-9a82-f2c5e5dade5c" />
 
